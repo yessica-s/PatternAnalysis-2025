@@ -36,3 +36,13 @@ test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
 train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train")
 validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate")
 test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test")
+
+# Put tensors into data loaders, matching images with masks 
+
+train_tensor_set = TensorDataset(train_set, train_mask)
+validation_tensor_set = TensorDataset(validation_set, validation_mask)
+test_tensor_set = TensorDataset(test_set, test_mask)
+
+train_loader = DataLoader(train_tensor_set, batch_size=128, shuffle=True, num_workers=2)
+validation_loader = DataLoader(validation_tensor_set, batch_size=128, shuffle=True, num_workers=2)
+test_loader = DataLoader(test_tensor_set, batch_size=128, shuffle=False, num_workers=2)
