@@ -4,8 +4,7 @@ import torch.nn.functional as F
 import numpy as np
 import matplotlib.pyplot as plt
 
-# leaky_relu_activation = nn.LeakyReLU(negative_slope=0.01) # slope of 10^-2
-
+# REFERENCE: https://github.com/fwrhine/ImprovedUNet/blob/master/improved_unet.py
 class uNet (nn.Module):
 
     def __init__(self, in_channels=1, out_channels=4, base_channels=16, dropout_p=0.3):
@@ -70,8 +69,38 @@ class uNet (nn.Module):
         e1, e2, e3, e4, bottleneck = self.encode(x)
         d1 = self.decode(e1, e2, e3, e4, bottleneck)
         final = self.final(d1)
-        final = torch.softmax(final, dim=1) # activation function - 
+        final = torch.softmax(final, dim=1) # activation function, retruns [batch size, num_classes, heigh, width]
 
         return final
     
+class DiceLoss(nn.Module):
+
+    def __init__(self, smooth=1e-6):
+        super(DiceLoss, self).__init__()
+        self.smooth = smooth
+
+    # Multi-class dice loss: REFERENCE: https://www.kaggle.com/code/doyeonkimmm/multiclass-segmentation-unet-modified-dice
+    #   - take one hot encoding of predictions
+    #   - calculate DICE on each class
+    #   - average is the final loss
+
+    def forward(self, predicted, true):
+        # REFERENCE: https://stackoverflow.com/questions/65125670/implementing-multiclass-dice-loss-function
+        # convert mask tensor to one hot encoded version and recorder to match softmax output 
+        true_one_hot = F.one_hot(true, num_classes=4).permute(0, 3, 1, 2).float() 
+        predicted = predicted[:, 1:, :, :] # ignore background class
+        true_one_hot = true_one_hot[:, 1:, :, :] # ignore background class
+
+        # REFERENCE: https://www.geeksforgeeks.org/deep-learning/loss-functions-in-deep-learning/
+        intersection = (predicted * true_one_hot).sum(dim=(0, 2, 3))
+        union = (predicted + true_one_hot).sum(dim=(0, 2, 3))
+
+        # REFERENCE: https://medium.com/data-scientists-diary/implementation-of-dice-loss-vision-pytorch-7eef1e438f68
+        # addition of smooth avoids div 0 error
+        dice_coefficient = (2 * intersection + self.smooth) / (union + self.smooth)
+        avg_dice_coefficient = dice_coefficient.mean() # mean dice coeff across the 4 classes
+
+        dice_loss = 1 - avg_dice_coefficient
+
+        return dice_loss
 
