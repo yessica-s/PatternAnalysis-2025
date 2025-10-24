@@ -6,7 +6,8 @@ import matplotlib.pyplot as plt
 
 # leaky_relu_activation = nn.LeakyReLU(negative_slope=0.01) # slope of 10^-2
 
-class UNet (nn.Module):
+class uNet (nn.Module):
+
     def __init__(self, in_channels=1, out_channels=4, base_channels=16, dropout_p=0.3):
         super().__init__()
         self.dropout_p = dropout_p
@@ -30,7 +31,7 @@ class UNet (nn.Module):
 
         self.pool = nn.MaxPool2d(2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
-        self.sigmoid = nn.Sigmoid()
+        # self.sigmoid = nn.Sigmoid()
 
     def _conv_block(self, in_channels, out_channels, dropout_p=0.3):
         # Convulution block with batch normalization and LeakyReLU: Conv -> BN -> LeakyReLU -> Dropout -> Conv -> BN -> LeakyReLU -> Dropout
@@ -45,22 +46,10 @@ class UNet (nn.Module):
             nn.Dropout2d(dropout_p)
         )
     
-    # Encoder
-    def encoder(self, x):
+    def forward(self, x):
         e1, e2, e3, e4, bottleneck = self.encode(x)
         d1 = self.decode(e1, e2, e3, e4, bottleneck)
         final = self.final(d1)
 
         return final
-    
-class DiceLoss(nn.Module):
-    """
-    Dice Loss = 1 - Dice Coefficient
-    Dice Coefficient = (2 * | X AND Y) / (|X|) + (|Y|)
-    """
-
-    def init(self, smooth=1e-6):
-        super(DiceLoss, self).__init__()
-        self.smooth = smooth
-
     
