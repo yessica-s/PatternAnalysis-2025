@@ -29,7 +29,7 @@ class uNet (nn.Module):
 
         self.final = nn.Conv2d(32, out_channels, 1)
 
-        self.pool = nn.MaxPool2d(2)
+        self.pool = nn.MaxPool2d(kernel_size = 2, stride = 2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
         # self.sigmoid = nn.Sigmoid()
 
@@ -46,10 +46,32 @@ class uNet (nn.Module):
             nn.Dropout2d(dropout_p)
         )
     
+    # Encoder function
+    def encode(self, x):
+        e1 = self.enc1(x)
+        e2 = self.enc2(self.pool(e1))
+        e3 = self.enc3(self.pool(e2))
+        e4 = self.enc4(self.pool(e3))
+
+        b = self.bottleneck(self.pool(e4))
+
+        return e1, e2, e3, e4, b
+    
+    # Decoder function
+    def decode(self, e1, e2, e3, e4, b):
+        d4 = self.dec4(torch.cat([self.upsample(b), e4], dim=1))
+        d3 = self.dec3(torch.cat([self.upsample(d4), e3], dim=1))
+        d2 = self.dec2(torch.cat([self.upsample(d3), e2], dim=1))
+        d1 = self.dec1(torch.cat([self.upsample(d2), e1], dim=1))
+
+        return d1
+    
     def forward(self, x):
         e1, e2, e3, e4, bottleneck = self.encode(x)
         d1 = self.decode(e1, e2, e3, e4, bottleneck)
         final = self.final(d1)
+        final = torch.softmax(final, dim=1) # activation function - 
 
         return final
     
+
