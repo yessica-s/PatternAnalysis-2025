@@ -1,0 +1,38 @@
+import torch
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader, TensorDataset
+import os
+from PIL import Image
+
+# Path to dataset on Ranpur
+# oasis_path = "/home/groups/comp3710/OASIS"
+
+# load into 2D tensors needed that are grey (so colour cant be considered feature)
+transform = transforms.Compose([
+    transforms.Grayscale(),
+    transforms.Resize((128, 128)), # Resize
+    transforms.ToTensor()
+])
+
+# Return two tensors of image and masks
+def load_images(folder):
+    image_list = []
+    for filename in os.listdir(folder):
+        if filename.endswith(".png"):
+            img_path = os.path.join(folder, filename)
+            img = Image.open(img_path)
+            img = transform(img) # greyscale, tensor, resize from above
+            image_list.append(img)
+
+    images_tensor = torch.stack(image_list) # put them all into one giant tensor
+    return images_tensor
+
+# Images and Masks are now loaded into tensors
+
+train_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_train")
+validation_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_validate")
+test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
+
+train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train")
+validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate")
+test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test")
