@@ -17,7 +17,7 @@ transform = transforms.Compose([
 # Return two tensors of image and masks
 def load_images(folder):
     image_list = []
-    for filename in os.listdir(folder):
+    for filename in sorted(os.listdir(folder)): # Make sure images and masks matched correctly by sorting
         if filename.endswith(".png"):
             img_path = os.path.join(folder, filename)
             img = Image.open(img_path)
@@ -33,9 +33,9 @@ train_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_train")
 validation_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_validate")
 test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
 
-train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train")
-validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate")
-test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test")
+train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train").float()
+validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate").float()
+test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test").float()
 
 # Put tensors into data loaders, matching images with masks 
 
@@ -44,5 +44,5 @@ validation_tensor_set = TensorDataset(validation_set, validation_mask)
 test_tensor_set = TensorDataset(test_set, test_mask)
 
 train_loader = DataLoader(train_tensor_set, batch_size=128, shuffle=True, num_workers=2)
-validation_loader = DataLoader(validation_tensor_set, batch_size=128, shuffle=True, num_workers=2)
+validation_loader = DataLoader(validation_tensor_set, batch_size=128, shuffle=False, num_workers=2)
 test_loader = DataLoader(test_tensor_set, batch_size=128, shuffle=False, num_workers=2)
