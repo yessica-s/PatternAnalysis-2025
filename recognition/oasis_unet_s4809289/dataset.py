@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader, TensorDataset
 import os
 from PIL import Image
 
+print("Data preprocessing started.")
+
 # Path to dataset on Ranpur
 # oasis_path = "/home/groups/comp3710/OASIS"
 
@@ -46,3 +48,5 @@ test_tensor_set = TensorDataset(test_set, test_mask)
 train_loader = DataLoader(train_tensor_set, batch_size=128, shuffle=True, num_workers=2)
 validation_loader = DataLoader(validation_tensor_set, batch_size=128, shuffle=False, num_workers=2)
 test_loader = DataLoader(test_tensor_set, batch_size=128, shuffle=False, num_workers=2)
+
+print("Data preprocessing complete.")
