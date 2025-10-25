@@ -31,22 +31,26 @@ def load_images(folder):
 
 # Images and Masks are now loaded into tensors
 
-train_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_train")
-validation_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_validate")
-test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
+def get_data_loaders(batch_size):
+    train_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_train")
+    validation_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_validate")
+    test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
 
-train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train").float()
-validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate").float()
-test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test").float()
+    train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train").float()
+    validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate").float()
+    test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test").float()
 
-# Put tensors into data loaders, matching images with masks 
+    # Put tensors into data loaders, matching images with masks 
 
-train_tensor_set = TensorDataset(train_set, train_mask)
-validation_tensor_set = TensorDataset(validation_set, validation_mask)
-test_tensor_set = TensorDataset(test_set, test_mask)
+    train_tensor_set = TensorDataset(train_set, train_mask)
+    validation_tensor_set = TensorDataset(validation_set, validation_mask)
+    test_tensor_set = TensorDataset(test_set, test_mask)
 
-train_loader = DataLoader(train_tensor_set, batch_size=128, shuffle=True, num_workers=2)
-validation_loader = DataLoader(validation_tensor_set, batch_size=128, shuffle=False, num_workers=2)
-test_loader = DataLoader(test_tensor_set, batch_size=128, shuffle=False, num_workers=2)
+    # batch_size previously 128
+    train_loader = DataLoader(train_tensor_set, batch_size, shuffle=True, num_workers=2)
+    validation_loader = DataLoader(validation_tensor_set, batch_size, shuffle=False, num_workers=2)
+    test_loader = DataLoader(test_tensor_set, batch_size, shuffle=False, num_workers=2)
 
-print("Data preprocessing complete.")
+    print("Data preprocessing complete.")
+
+    return train_tensor_set, validation_tensor_set, test_tensor_set, train_loader, validation_loader, test_loader

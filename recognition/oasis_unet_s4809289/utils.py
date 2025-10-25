@@ -6,21 +6,18 @@ import torch.nn.functional as F
 
 def denormalize_image(tensor):
     """Safely denormalize an image tensor (works on CPU/GPU and for grayscale or RGB)."""
-    # Move to CPU if necessary
     if tensor.is_cuda:
         tensor = tensor.cpu()
     
     # If grayscale, just clamp between 0–1
     if tensor.shape[0] == 1:
         return torch.clamp(tensor, 0, 1)
-    
     # If 3-channel RGB
     elif tensor.shape[0] == 3:
         mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
         std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
         denorm_tensor = tensor * std + mean
-        return torch.clamp(denorm_tensor, 0, 1)
-    
+        return torch.clamp(denorm_tensor, 0, 1) 
     # For unexpected channel numbers
     else:
         # fallback: just clamp
@@ -85,7 +82,6 @@ def show_predictions(model, dataset, device, num_classes=4, n=3, title="Multicla
     model.eval()
     fig, axes = plt.subplots(3, n, figsize=(12, 9))
     fig.suptitle(title, fontsize=15, fontweight='bold')
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     with torch.no_grad(): # no gradient descent/backpropagation
         for i in range(n):

@@ -5,15 +5,11 @@ import torch.optim as optim
 from modules import DiceLoss 
 from utils import denormalize_image, show_epoch_predictions
 
-print("Training model started.")
-
-# Check if CUDA is available
-device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print(f'Using device: {device}')
-
                                                            # lr=0.001
 def train(model, train_loader, validation_loader, validation_tensor_set, epochs=50, lr=1e-4, visualize_every=1):
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
+    
     loss_function = DiceLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
