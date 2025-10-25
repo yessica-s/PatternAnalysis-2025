@@ -49,11 +49,20 @@ def load_image(image_folder, mask_folder):
     image_files = sorted([f for f in os.listdir(image_folder) if f.endswith(".png")])
     
     for img in image_files:
-        split_name = img.split('_')
-        image_number = split_name[1]
-        slice_number = split_name[3]
+        # split_name = img.split('_')
+        # image_number = split_name[1]
+        # slice_number = split_name[3]
+        # mask_name = f"seg_{image_number}_slice_{slice_number}.nii.png"
 
-        mask_name = f"seg_{image_number}_slice_{slice_number}.nii.png"
+        # mask_path = os.path.join(mask_folder, mask_name)
+        # img_path = os.path.join(image_folder, img)
+
+        parts = img.split('_')
+        slice_number = parts[-1].split('.')[0]  # last part before '.nii.png'
+
+        case_number = int(parts[1])
+        mask_case_number = f"{case_number:03d}"
+        mask_name = f"seg_{mask_case_number}_slice_{slice_number}.nii.png"
         mask_path = os.path.join(mask_folder, mask_name)
         img_path = os.path.join(image_folder, img)
 
