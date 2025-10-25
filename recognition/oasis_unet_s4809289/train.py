@@ -11,7 +11,7 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
     model.to(device)
     
     loss_function = DiceLoss()
-    # bce_function = nn.BCELoss()
+    bce_function = nn.BCELoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
 
     train_loss = []
@@ -30,7 +30,10 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
 
             # Loss function (DiceLoss) on all classes
             # loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
-            loss = loss_function(outputs, mask)
+            # loss = loss_function(outputs, mask)
+            bce_loss = torch.nn.BCEWithLogitsLoss()(outputs, mask)
+            dice_loss_val = loss_function(torch.sigmoid(outputs), mask)
+            loss = 0.5 * bce_loss + 0.5 * dice_loss_val
             loss.backward()
             optimizer.step() # gradient descent
 
@@ -47,8 +50,8 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
             for image, mask in validation_loader:
                 image, mask = image.to(device), mask.to(device)
                 outputs = model(image)
-                # val_loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
-                val_loss = loss_function(outputs, mask)
+                val_loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
+                # val_loss = loss_function(outputs, mask)
                 epoch_val_loss += val_loss.item()
 
             avg_val_loss = epoch_val_loss / len(validation_loader)

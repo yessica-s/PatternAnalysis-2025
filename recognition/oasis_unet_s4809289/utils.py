@@ -43,12 +43,11 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
             # Denormalize image for display
             img_show = denormalize_image(image)
 
-            # --- FIX: squeeze channel dim if present ---
             if img_show.ndim == 3 and img_show.shape[0] == 1:
                 img_display = img_show.squeeze(0).numpy()
-            elif img_show.ndim == 3:
+            elif img_show.ndim == 3 and img_show.shape[0] > 1:
                 img_display = img_show.permute(1, 2, 0).numpy()
-            else:
+            elif img_show.ndim == 2:
                 img_display = img_show.numpy()
 
             # Plot Image
@@ -57,11 +56,18 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
             axes[0, i].axis('off')
 
             # Plot ground truth mask
+            # Check masks have shape (H, W) for matplotlib
+            if true_mask_np.ndim == 3 and true_mask_np.shape[0] == 1:
+                true_mask_np = true_mask_np.squeeze(0)
+
             im1 = axes[1, i].imshow(true_mask_np, cmap=cmap, vmin=0, vmax=3)
             axes[1, i].set_title(f'Ground Truth {i+1}', fontweight='bold')
             axes[1, i].axis('off')
 
             # Plot predicted
+            if pred_mask.ndim == 3 and pred_mask.shape[0] == 1:
+                pred_mask = pred_mask.squeeze(0)
+
             im2 = axes[2, i].imshow(pred_mask, cmap=cmap, vmin=0, vmax=3)
             acc = np.mean(pred_mask == true_mask_np)
             axes[2, i].set_title(f'Prediction {i+1} (Acc: {acc:.3f})', fontweight='bold')
@@ -92,13 +98,12 @@ def show_predictions(model, dataset, device, num_classes=1, n=3, title="Multicla
             else:
                 pred_mask = (torch.sigmoid(output) > 0.5).int().squeeze().cpu()
 
-            # --- FIX: squeeze channel dim if present ---
             img_show = image.squeeze(0).cpu()
             if img_show.ndim == 3 and img_show.shape[0] == 1:
                 img_np = img_show.squeeze(0).numpy()
-            elif img_show.ndim == 3:
+            elif img_show.ndim == 3 and img_show.shape[0] > 1:
                 img_np = img_show.permute(1, 2, 0).numpy()
-            else:
+            elif img_show.ndim == 2:
                 img_np = img_show.numpy()
 
             true_mask = true_mask.squeeze().cpu().numpy()
