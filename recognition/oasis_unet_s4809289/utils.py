@@ -2,6 +2,7 @@ import numpy as np
 import torch
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
+import torch.nn.functional as F
 
 def denormalize_image(tensor):
     """Safely denormalize an image tensor (works on CPU/GPU and for grayscale or RGB)."""
@@ -78,3 +79,44 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
     plt.tight_layout()
     plt.show()
     model.train()
+
+def show_predictions(model, dataset, device, num_classes=4, n=3, title="Multiclass Segmentation Results"):
+    # Show model predictions vs ground truth on test dataset
+    model.eval()
+    fig, axes = plt.subplots(3, n, figsize=(12, 9))
+    fig.suptitle(title, fontsize=15, fontweight='bold')
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+    with torch.no_grad(): # no gradient descent/backpropagation
+        for i in range(n):
+            image, true_mask = dataset[i]
+            image = image.unsqueeze(0).to(device) 
+
+            # Get probabilities
+            output = model(image)
+            pred_mask = torch.argmax(F.softmax(output, dim=1), dim=1).squeeze(0).cpu()
+
+            # Numpy for plotting
+            img_show = image.squeeze(0).cpu().numpy().transpose(1, 2, 0)
+            true_mask = true_mask.squeeze().cpu().numpy()
+            pred_mask = pred_mask.numpy()
+
+            # Original image
+            axes[0, i].imshow(img_show, cmap='gray')
+            axes[0, i].set_title(f"Original {i+1}", fontweight='bold')
+            axes[0, i].axis('off')
+
+            # Ground truth mask
+            axes[1, i].imshow(true_mask, cmap='tab10', vmin=0, vmax=num_classes-1)
+            axes[1, i].set_title("Ground Truth", fontweight='bold')
+            axes[1, i].axis('off')
+
+            # Predicted mask
+            axes[2, i].imshow(pred_mask, cmap='tab10', vmin=0, vmax=num_classes-1)
+            acc = np.mean(pred_mask == true_mask)
+            axes[2, i].set_title(f"Prediction (Acc: {acc:.2f})", fontweight='bold')
+            axes[2, i].axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
