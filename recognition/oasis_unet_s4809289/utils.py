@@ -5,29 +5,20 @@ from matplotlib.colors import ListedColormap
 import torch.nn.functional as F
 
 def denormalize_image(tensor):
-    """Safely denormalize an image tensor (works on CPU/GPU and for grayscale or RGB)."""
     if tensor.is_cuda:
         tensor = tensor.cpu()
     
     # If grayscale, just clamp between 0–1
-    if tensor.shape[0] == 1:
-        return torch.clamp(tensor, 0, 1)
-    # If 3-channel RGB
-    elif tensor.shape[0] == 3:
-        mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
-        std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
-        denorm_tensor = tensor * std + mean
-        return torch.clamp(denorm_tensor, 0, 1) 
-    # For unexpected channel numbers
+    if tensor.ndim == 3 and tensor.shape[0] == 1: # if grayscale, convert to 3D tensor
+        return tensor.squeeze(0)
     else:
-        # fallback: just clamp
-        return torch.clamp(tensor, 0, 1)
+        return tensor
 
 def show_epoch_predictions(model, dataset, epoch, n=3):
-    """Show model predictions for multi-class segmentation after a specific epoch."""
+    # Show model predictions for multi-class segmentation after a specific epoch.
     model.eval()
     fig, axes = plt.subplots(3, n, figsize=(12, 9))
-    fig.suptitle(f'🎯 Predictions After Epoch {epoch}', fontsize=16, fontweight='bold')
+    fig.suptitle(f'Prediction After Epoch {epoch}', fontsize=16, fontweight='bold')
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
     # Define colors for up to 4 classes
@@ -36,48 +27,53 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
     with torch.no_grad():
         for i in range(n):
             image, true_mask = dataset[i]
-            
+    
             image_input = image.unsqueeze(0).to(device)
 
+            # Get predicted mask
             pred = model(image_input)
 
-            # If softmax: take argmax; if sigmoid: threshold
             if pred.shape[1] > 1:  
                 pred_mask = torch.argmax(pred, dim=1)[0].cpu().numpy()
             else:
-                pred_mask = (pred[0, 0] > 0.5).cpu().numpy().astype(int)
+                pred_mask = (torch.sigmoid(pred[0, 0]) > 0.5).cpu().numpy().astype(int)
 
             true_mask_np = true_mask.numpy()
 
             # Denormalize image for display
             img_show = denormalize_image(image)
-            img_display = img_show.permute(1, 2, 0).numpy()
 
-            # --- Plot Original ---
-            axes[0, i].imshow(img_display)
+            # Handle grayscale
+            if img_show.ndim == 2:
+                img_display = img_show.numpy()
+            else:
+                img_display = img_show.permute(1, 2, 0).numpy()
+
+            # Plot Image
+            axes[0, i].imshow(img_display, cmap='gray' if img_display.ndim == 2 else None)
             axes[0, i].set_title(f'Original {i+1}', fontweight='bold')
             axes[0, i].axis('off')
 
-            # --- Ground Truth ---
+            # Plot ground truth mask
             im1 = axes[1, i].imshow(true_mask_np, cmap=cmap, vmin=0, vmax=3)
             axes[1, i].set_title(f'Ground Truth {i+1}', fontweight='bold')
             axes[1, i].axis('off')
 
-            # --- Prediction ---
+            # Plot predicted
             im2 = axes[2, i].imshow(pred_mask, cmap=cmap, vmin=0, vmax=3)
             acc = np.mean(pred_mask == true_mask_np)
             axes[2, i].set_title(f'Prediction {i+1} (Acc: {acc:.3f})', fontweight='bold')
             axes[2, i].axis('off')
 
-            # Optional: add colorbar only once
-            if i == 0:
-                plt.colorbar(im2, ax=axes[:, i], shrink=0.6, ticks=range(4), label='Class index')
+            # if i == 0:
+            #     plt.colorbar(im2, ax=axes[:, i], shrink=0.6, ticks=range(4), label='Class index')
 
     plt.tight_layout()
     plt.show()
     model.train()
 
-def show_predictions(model, dataset, device, num_classes=4, n=3, title="Multiclass Segmentation Results"):
+                                            # num_classes = 4
+def show_predictions(model, dataset, device, num_classes=1, n=3, title="Multiclass Segmentation Results"):
     # Show model predictions vs ground truth on test dataset
     model.eval()
     fig, axes = plt.subplots(3, n, figsize=(12, 9))
@@ -90,15 +86,25 @@ def show_predictions(model, dataset, device, num_classes=4, n=3, title="Multicla
 
             # Get probabilities
             output = model(image)
-            pred_mask = torch.argmax(F.softmax(output, dim=1), dim=1).squeeze(0).cpu()
 
-            # Numpy for plotting
-            img_show = image.squeeze(0).cpu().numpy().transpose(1, 2, 0)
+            # sigmoid for binary, softmax for multi-class
+            if num_classes > 1:
+                pred_mask = torch.argmax(F.softmax(output, dim=1), dim=1).squeeze(0).cpu()
+            else:
+                pred_mask = (torch.sigmoid(output) > 0.5).int().squeeze().cpu()
+
+            # Handle grayscale
+            img_show = image.squeeze(0).cpu()
+            if img_show.ndim == 2:
+                img_np = img_show.numpy()
+            else:
+                img_np = img_show.permute(1, 2, 0).numpy()
+
             true_mask = true_mask.squeeze().cpu().numpy()
             pred_mask = pred_mask.numpy()
 
             # Original image
-            axes[0, i].imshow(img_show, cmap='gray')
+            axes[0, i].imshow(img_np, cmap='gray' if img_np.ndim == 2 else None)
             axes[0, i].set_title(f"Original {i+1}", fontweight='bold')
             axes[0, i].axis('off')
 
@@ -115,4 +121,3 @@ def show_predictions(model, dataset, device, num_classes=4, n=3, title="Multicla
 
     plt.tight_layout()
     plt.show()
-
