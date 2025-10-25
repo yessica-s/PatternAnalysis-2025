@@ -43,11 +43,13 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
             # Denormalize image for display
             img_show = denormalize_image(image)
 
-            # Handle grayscale
-            if img_show.ndim == 2:
-                img_display = img_show.numpy()
-            else:
+            # --- FIX: squeeze channel dim if present ---
+            if img_show.ndim == 3 and img_show.shape[0] == 1:
+                img_display = img_show.squeeze(0).numpy()
+            elif img_show.ndim == 3:
                 img_display = img_show.permute(1, 2, 0).numpy()
+            else:
+                img_display = img_show.numpy()
 
             # Plot Image
             axes[0, i].imshow(img_display, cmap='gray' if img_display.ndim == 2 else None)
@@ -64,9 +66,6 @@ def show_epoch_predictions(model, dataset, epoch, n=3):
             acc = np.mean(pred_mask == true_mask_np)
             axes[2, i].set_title(f'Prediction {i+1} (Acc: {acc:.3f})', fontweight='bold')
             axes[2, i].axis('off')
-
-            # if i == 0:
-            #     plt.colorbar(im2, ax=axes[:, i], shrink=0.6, ticks=range(4), label='Class index')
 
     plt.tight_layout()
     plt.show()
@@ -93,12 +92,14 @@ def show_predictions(model, dataset, device, num_classes=1, n=3, title="Multicla
             else:
                 pred_mask = (torch.sigmoid(output) > 0.5).int().squeeze().cpu()
 
-            # Handle grayscale
+            # --- FIX: squeeze channel dim if present ---
             img_show = image.squeeze(0).cpu()
-            if img_show.ndim == 2:
-                img_np = img_show.numpy()
-            else:
+            if img_show.ndim == 3 and img_show.shape[0] == 1:
+                img_np = img_show.squeeze(0).numpy()
+            elif img_show.ndim == 3:
                 img_np = img_show.permute(1, 2, 0).numpy()
+            else:
+                img_np = img_show.numpy()
 
             true_mask = true_mask.squeeze().cpu().numpy()
             pred_mask = pred_mask.numpy()
