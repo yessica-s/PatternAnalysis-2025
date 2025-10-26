@@ -6,6 +6,7 @@ from utils import show_predictions, show_epoch_predictions
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 import numpy as np
+import torch.nn as nn
 
 if __name__ == "__main__":
     # setup
@@ -21,13 +22,14 @@ if __name__ == "__main__":
 
     # Train the model
     print("Training started...")
-    train(model, train_loader, val_loader, val_loader.dataset, epochs=50, lr=1e-4, visualize_every=5)
+    train(model, train_loader, val_loader, val_loader.dataset, epochs=10, lr=1e-4, visualize_every=5)
     print("Training complete.")
 
     # Run model on test set
     print("Running model on test set...")
     model.eval()
-    dice_loss = DiceLoss()
+    loss_function = DiceLoss()
+    bce_function = nn.BCELoss()
     test_loss = 0
     test_coefficients = 0
 
@@ -35,7 +37,8 @@ if __name__ == "__main__":
         for image, mask in test_loader:
             image, mask = image.to(device), mask.to(device)
             output = model(image)
-            loss = dice_loss(output, mask) # returns dice loss
+            loss = loss_function(output, mask) # returns dice loss
+            # loss = 0.5 * bce_function(output, mask) + 0.5 * loss_function(output, mask)
             test_loss += loss.item()
 
             dice_coeffcient = 1 - loss.item() # get dice coefficient

@@ -59,14 +59,6 @@ def load_image(image_folder, mask_folder):
 
 def get_data_loaders(batch_size):
 
-    # train_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_train")
-    # validation_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_validate")
-    # test_set = load_images("/home/groups/comp3710/OASIS/keras_png_slices_test")
-
-    # train_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_train").float()
-    # validation_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_validate").float()
-    # test_mask = load_images("/home/groups/comp3710/OASIS/keras_png_slices_seg_test").float()
-
     # Process datasets together to ensure images and masks aligned
     train_set, train_mask = load_image("/home/groups/comp3710/OASIS/keras_png_slices_train",
                                         "/home/groups/comp3710/OASIS/keras_png_slices_seg_train")
