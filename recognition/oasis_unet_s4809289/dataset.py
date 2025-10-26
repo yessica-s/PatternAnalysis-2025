@@ -23,25 +23,6 @@ transform_mask = transforms.Compose([
     transforms.ToTensor()
 ])
 
-# # Return two tensors of image and masks
-# def load_image(folder, mask=False):
-#     image_list = []
-#     for filename in sorted(os.listdir(folder)): # Make sure images and masks matched correctly by sorting
-#         if filename.endswith(".png"):
-#             img_path = os.path.join(folder, filename)
-#             img = Image.open(img_path)
-
-#             # Add interpolation to masks, removes noise so easier distinction
-#             if mask:
-#                 img = transform_image(img) # greyscale, tensor, resize from above
-#             else:
-#                 img = transform_mask(img) # greyscale, tensor, resize from above
-        
-#             image_list.append(img)
-
-#     images_tensor = torch.stack(image_list) # put them all into one giant tensor
-#     return images_tensor
-
 def load_image(image_folder, mask_folder):
     images = []
     masks = []
@@ -49,13 +30,6 @@ def load_image(image_folder, mask_folder):
     image_files = sorted([f for f in os.listdir(image_folder) if f.endswith(".png")])
     
     for img in image_files:
-        # split_name = img.split('_')
-        # image_number = split_name[1]
-        # slice_number = split_name[3]
-        # mask_name = f"seg_{image_number}_slice_{slice_number}.nii.png"
-
-        # mask_path = os.path.join(mask_folder, mask_name)
-        # img_path = os.path.join(image_folder, img)
 
         parts = img.split('_')
         slice_number = parts[-1].split('.')[0]  # last part before '.nii.png'
@@ -72,6 +46,8 @@ def load_image(image_folder, mask_folder):
 
             img = transform_image(img)
             mask = transform_mask(mask)
+            mask = (mask > 0.5).float()  # convert mask to binary
+            
             images.append(img)
             masks.append(mask)
         else:

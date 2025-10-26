@@ -29,11 +29,11 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
             outputs = model(image) # returns softmax output format
 
             # Loss function (DiceLoss) on all classes
-            # loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
-            # loss = loss_function(outputs, mask)
-            bce_loss = torch.nn.BCEWithLogitsLoss()(outputs, mask)
-            dice_loss_val = loss_function(torch.sigmoid(outputs), mask)
-            loss = 0.5 * bce_loss + 0.5 * dice_loss_val
+            loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
+            loss = loss_function(outputs, mask)
+            # bce_loss = torch.nn.BCEWithLogitsLoss()(outputs, mask)
+            # dice_loss_val = loss_function(torch.sigmoid(outputs), mask)
+            # loss = 0.5 * bce_loss + 0.5 * dice_loss_val
             loss.backward()
             optimizer.step() # gradient descent
 

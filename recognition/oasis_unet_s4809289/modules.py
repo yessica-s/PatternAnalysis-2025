@@ -13,20 +13,20 @@ class uNet(nn.Module):
         self.base_channels = base_channels
 
         # Encode
-        self.enc1 = self._conv_block(in_channels, 16, dropout_p)
-        self.enc2 = self._conv_block(16, 32, dropout_p)
-        self.enc3 = self._conv_block(32, 64, dropout_p)
-        self.enc4 = self._conv_block(64, 128, dropout_p)
+        self.enc1 = self._conv_block(in_channels, 32, dropout_p)
+        self.enc2 = self._conv_block(32, 64, dropout_p)
+        self.enc3 = self._conv_block(64, 128, dropout_p)
+        self.enc4 = self._conv_block(128, 256, dropout_p)
 
-        self.bottleneck = self._conv_block(128, 256, dropout_p)
+        self.bottleneck = self._conv_block(256, 512, dropout_p)
 
         # Deocde
-        self.dec4 = self._conv_block(256 + 128, 128, dropout_p)
-        self.dec3 = self._conv_block(128 + 64, 64, dropout_p)
-        self.dec2 = self._conv_block(64 + 32, 32, dropout_p)
-        self.dec1 = self._conv_block(32 + 16, 16, dropout_p)
+        self.dec4 = self._conv_block(512 + 256, 256, dropout_p)
+        self.dec3 = self._conv_block(256 + 128, 128, dropout_p)
+        self.dec2 = self._conv_block(128 + 64, 64, dropout_p)
+        self.dec1 = self._conv_block(64 + 32, 32, dropout_p)
 
-        self.final = nn.Conv2d(16, out_channels, 1)
+        self.final = nn.Conv2d(32, out_channels, 1)
 
         self.pool = nn.MaxPool2d(kernel_size = 2, stride = 2)
         self.upsample = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
