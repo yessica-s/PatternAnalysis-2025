@@ -54,6 +54,12 @@ _Figure 1. Ground Truth vs Predictions during Training_
 
 _Figure 2. Ground Truth vs Predictions on Test Set_
 
+The following image shows the training curve over 20 epochs of training.
+
+<img width="700" height="450" alt="image" src="https://github.com/user-attachments/assets/98c5a6a4-87fc-488d-9489-9937a99e826d" />
+
+_Figure 3. Training Curve_
+
 ## Dependencies
 
 The following commands were used to setup the environment and install required packages/libraries.
