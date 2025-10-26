@@ -30,7 +30,7 @@ The following steps are involved in pre-processing the dataset.
 3. Interpolation implemented for image masks
 4. Masks binarized
 5. Images and Masks gathered in Tensors and Data Loaders
-   (these Data Loaders are separated by Training, Validation, and Test Images)
+   (these were separated by Training, Validation, and Test Images)
 
 #### Training
 
@@ -40,7 +40,7 @@ The following steps are involved in pre-processing the dataset.
 
 #### Testing
 
-After testing, the dice coefficient similarity score of > 0.9 was attained. 
+After testing, the average dice coefficient similarity score was found to be 0.9816, alongside an average Dice Loss of 0.0185.
 
 ## Visualization
 
