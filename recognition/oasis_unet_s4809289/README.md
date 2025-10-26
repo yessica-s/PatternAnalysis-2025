@@ -19,8 +19,6 @@ to be recreated by the model's Decoder in order to predict an accurate brain tis
 This implementation of the Improved UNet architecture is different from the Simple UNet architecture in the following main ways:
 * LeakyReLU activation function used over ReLU
 * Batch Normalization after all convolutional layers
-* Dropout rate of 0.3
-* Dice Loss
 
 #### Data Preprocessing
 
@@ -28,10 +26,12 @@ The following steps are involved in pre-processing the dataset.
 
 1. Images and Masks are resized to 128, 128
 2. Images and Masks converted to grayscale
-3. Interpolation implemented for image masks
-4. Masks binarized
-5. Images and Masks gathered in Tensors and Data Loaders
-   (these were separated by Training, Validation, and Test Images)
+3. Interpolation implemented
+   * Nearest for Segmentation Masks
+   * Bilinear for Images
+5. Masks binarized
+6. Images and Masks gathered in Tensors and Data Loaders
+   (separated by Training, Validation, and Test Images)
 
 #### Training
 
