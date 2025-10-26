@@ -7,7 +7,7 @@
 
 This task aims to solve the problem of segmenting the 2D brain dataset. 
 This involves identifying distinct features and areas of brain tissue for 
-the purposes of medical imaging and diagonoses. We aim to develop a Machine 
+the purposes of medical imaging and diagnoses. We aim to develop a Machine 
 Learning model which can accurately extract and identify patterns in brain tissue from MRI Scans. 
 
 ## Implementation
