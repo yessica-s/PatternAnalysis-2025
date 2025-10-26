@@ -78,7 +78,7 @@ The following options can be used to run the model on the Ranpur cluster. It is 
 that the model is run on the Ranpur cluster as the model directly references file paths
 relative to the location of the 2D OASIS dataset on Ranpur.
 
-#### Option 1
+#### Option 1 (using Ranpur cluster)
 
 ```
 vim runner
@@ -104,11 +104,14 @@ Run the following command in the location of the runner file.
 sbatch runner
 ```
 
-#### Option 2
+#### Option 2 (using Ranpur cluster)
 Alternatively, run the following commands directly in the terminal
 ```
 conda activate torch
 srun -p a100-test --gres=shard:1 python predict.py
 ```
 
-
+#### Option 3 
+```
+python predict.py
+```
