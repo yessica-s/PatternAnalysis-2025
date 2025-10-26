@@ -34,7 +34,7 @@ The following steps are involved in pre-processing the dataset.
 
 #### Training
 
-* During this stage, the model undergoes 50 epochs of training, and typically reaches the desired dice coefficient of > 0.9 after 2-5 epochs.
+* During this stage, the model undergoes 20 epochs of training, and typically reaches the desired dice coefficient of > 0.9 after 2-5 epochs.
 * A learning rate of 0.0001 was implemented
 * Dice Loss loss function was implemented
 
