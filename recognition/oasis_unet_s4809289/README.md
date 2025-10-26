@@ -12,14 +12,15 @@ Learning model which can accurately extract and identify patterns in brain tissu
 
 ## Implementation
 
-This model implements an Improved UNet model. This model aims to take the images of brain scans
+This model implements an Improved UNet architecture. This model aims to take the images of brain scans
 and extract features from them via an Encoder. From there, these layers and features are attempted
-to be recreated by the model in order to predict an accurate brain tissue mask. Finally, the model 
-produces a 2D segmentation map to represent the predicted different features of the brain.
+to be recreated by the model's Decoder in order to predict an accurate brain tissue mask. As such, the model attempts to produce a 2D segmentation map to represent the predicted different features and regions of the brain.
 
-The Improved UNet is different from the Simple UNet model in the following main ways:
+This implementation of the Improved UNet architecture is different from the Simple UNet architecture in the following main ways:
 * LeakyReLU activation function used over ReLU
 * Batch Normalization after all convolutional layers
+* Dropout rate of 0.3
+* Dice Loss
 
 #### Data Preprocessing
 
