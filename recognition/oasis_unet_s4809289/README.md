@@ -41,7 +41,7 @@ The following steps are involved in pre-processing the dataset.
 
 #### Testing
 
-After testing, the average dice coefficient similarity score was found to be 0.9857, alongside an average Dice Loss of 0.0143.
+After testing, the average dice coefficient similarity score was found to be 0.9854, alongside an average Dice Loss of 0.0146.
 
 ## Visualization
 
