@@ -1,0 +1,72 @@
+Data preprocessing started.
+Using device: cuda
+Data preprocessing complete.
+Data loaded successfully.
+Training started...
+Epoch 1/50  |  Train Loss: 0.2081 | Val Loss: 0.0589
+Epoch 2/50  |  Train Loss: 0.0502 | Val Loss: 0.0305
+Epoch 3/50  |  Train Loss: 0.0303 | Val Loss: 0.0249
+Epoch 4/50  |  Train Loss: 0.0249 | Val Loss: 0.0250
+Epoch 5/50  |  Train Loss: 0.0225 | Val Loss: 0.0261
+Prediction After Epoch 5
+Epoch 6/50  |  Train Loss: 0.0213 | Val Loss: 0.0280
+Epoch 7/50  |  Train Loss: 0.0201 | Val Loss: 0.0280
+Epoch 8/50  |  Train Loss: 0.0196 | Val Loss: 0.0296
+Epoch 9/50  |  Train Loss: 0.0189 | Val Loss: 0.0318
+Epoch 10/50  |  Train Loss: 0.0186 | Val Loss: 0.0328
+Prediction After Epoch 10
+Epoch 11/50  |  Train Loss: 0.0181 | Val Loss: 0.0306
+Epoch 12/50  |  Train Loss: 0.0178 | Val Loss: 0.0327
+Epoch 13/50  |  Train Loss: 0.0175 | Val Loss: 0.0364
+Epoch 14/50  |  Train Loss: 0.0173 | Val Loss: 0.0347
+Epoch 15/50  |  Train Loss: 0.0170 | Val Loss: 0.0400
+Prediction After Epoch 15
+Epoch 16/50  |  Train Loss: 0.0169 | Val Loss: 0.0373
+Epoch 17/50  |  Train Loss: 0.0166 | Val Loss: 0.0424
+Epoch 18/50  |  Train Loss: 0.0164 | Val Loss: 0.0398
+Epoch 19/50  |  Train Loss: 0.0163 | Val Loss: 0.0426
+Epoch 20/50  |  Train Loss: 0.0161 | Val Loss: 0.0403
+Prediction After Epoch 20
+Epoch 21/50  |  Train Loss: 0.0160 | Val Loss: 0.0499
+Epoch 22/50  |  Train Loss: 0.0159 | Val Loss: 0.0481
+Epoch 23/50  |  Train Loss: 0.0156 | Val Loss: 0.0436
+Epoch 24/50  |  Train Loss: 0.0156 | Val Loss: 0.0470
+Epoch 25/50  |  Train Loss: 0.0155 | Val Loss: 0.0533
+Prediction After Epoch 25
+Epoch 26/50  |  Train Loss: 0.0154 | Val Loss: 0.0520
+Epoch 27/50  |  Train Loss: 0.0153 | Val Loss: 0.0498
+Epoch 28/50  |  Train Loss: 0.0152 | Val Loss: 0.0521
+Epoch 29/50  |  Train Loss: 0.0151 | Val Loss: 0.0514
+Epoch 30/50  |  Train Loss: 0.0151 | Val Loss: 0.0454
+Prediction After Epoch 30
+Epoch 31/50  |  Train Loss: 0.0151 | Val Loss: 0.0523
+Epoch 32/50  |  Train Loss: 0.0149 | Val Loss: 0.0584
+Epoch 33/50  |  Train Loss: 0.0148 | Val Loss: 0.0815
+Epoch 34/50  |  Train Loss: 0.0148 | Val Loss: 0.0574
+Epoch 35/50  |  Train Loss: 0.0147 | Val Loss: 0.0529
+Prediction After Epoch 35
+Epoch 36/50  |  Train Loss: 0.0147 | Val Loss: 0.0677
+Epoch 37/50  |  Train Loss: 0.0146 | Val Loss: 0.0659
+Epoch 38/50  |  Train Loss: 0.0146 | Val Loss: 0.0515
+Epoch 39/50  |  Train Loss: 0.0145 | Val Loss: 0.0675
+Epoch 40/50  |  Train Loss: 0.0144 | Val Loss: 0.0596
+Prediction After Epoch 40
+Epoch 41/50  |  Train Loss: 0.0145 | Val Loss: 0.0616
+Epoch 42/50  |  Train Loss: 0.0143 | Val Loss: 0.0645
+Epoch 43/50  |  Train Loss: 0.0143 | Val Loss: 0.0687
+Epoch 44/50  |  Train Loss: 0.0143 | Val Loss: 0.0679
+Epoch 45/50  |  Train Loss: 0.0142 | Val Loss: 0.0626
+Prediction After Epoch 45
+Epoch 46/50  |  Train Loss: 0.0142 | Val Loss: 0.0697
+Epoch 47/50  |  Train Loss: 0.0141 | Val Loss: 0.0682
+Epoch 48/50  |  Train Loss: 0.0142 | Val Loss: 0.0779
+Epoch 49/50  |  Train Loss: 0.0142 | Val Loss: 0.0760
+Epoch 50/50  |  Train Loss: 0.0141 | Val Loss: 0.0835
+Prediction After Epoch 50
+Training model complete.
+Training complete.
+Running model on test set...
+Average Test Dice Loss: 0.0143
+Average Test Dice Coefficient: 0.9857
+Visualizing predictions on test samples...
+Script complete.
