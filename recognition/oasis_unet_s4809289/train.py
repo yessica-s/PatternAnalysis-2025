@@ -6,7 +6,7 @@ from modules import DiceLoss
 from utils import denormalize_image, show_epoch_predictions
 
                                                            # lr=0.001
-def train(model, train_loader, validation_loader, validation_tensor_set, epochs=10, lr=1e-4, visualize_every=1):
+def train(model, train_loader, validation_loader, validation_tensor_set, epochs=50, lr=1e-4, visualize_every=1):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     
@@ -29,8 +29,8 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
             outputs = model(image) # returns softmax output format
 
             # Loss function (DiceLoss) on all classes
-            # loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
-            loss = loss_function(outputs, mask) # Dice Loss
+            loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
+            loss = loss_function(outputs, mask)
             loss.backward()
             optimizer.step() # gradient descent
 
@@ -47,8 +47,8 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
             for image, mask in validation_loader:
                 image, mask = image.to(device), mask.to(device)
                 outputs = model(image)
-                # val_loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
-                val_loss = loss_function(outputs, mask)
+                val_loss = 0.5 * bce_function(outputs, mask) + 0.5 * loss_function(outputs, mask)
+                # val_loss = loss_function(outputs, mask)
                 epoch_val_loss += val_loss.item()
 
             avg_val_loss = epoch_val_loss / len(validation_loader)
@@ -59,5 +59,6 @@ def train(model, train_loader, validation_loader, validation_tensor_set, epochs=
         if (epoch + 1) % visualize_every == 0:
             show_epoch_predictions(model, validation_tensor_set, epoch+1)
 
-    return train_loss, validation_loss
 
+    print("Training model complete.")
+    return train_loss, validation_loss

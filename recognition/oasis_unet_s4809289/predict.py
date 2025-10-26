@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     # Train the model
     print("Training started...")
-    train(model, train_loader, val_loader, val_loader.dataset, epochs=10, lr=1e-4, visualize_every=5)
+    train(model, train_loader, val_loader, val_loader.dataset, epochs=50, lr=1e-4, visualize_every=5)
     print("Training complete.")
 
     # Run model on test set
