@@ -6,7 +6,7 @@ from modules import DiceLoss
 from utils import denormalize_image, show_epoch_predictions
 
                                                            # lr=0.001
-def train(model, train_loader, validation_loader, validation_tensor_set, epochs=50, lr=1e-4, visualize_every=5):
+def train(model, train_loader, validation_loader, validation_tensor_set, epochs=20, lr=1e-4, visualize_every=5):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     
