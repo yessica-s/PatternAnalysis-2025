@@ -12,12 +12,11 @@ Learning model which can accurately extract and identify patterns in brain tissu
 
 ## Implementation
 
-This model implements an Improved UNet model. This model aims to take the images of brain scans
+This model implements an Improved UNet architecture. This model aims to take the images of brain scans
 and extract features from them via an Encoder. From there, these layers and features are attempted
-to be recreated by the model in order to predict an accurate brain tissue mask. Finally, the model 
-produces a 2D segmentation map to represent the predicted different features of the brain.
+to be recreated by the model's Decoder in order to predict an accurate brain tissue mask. As such, the model attempts to produce a 2D segmentation map to represent the predicted different features and regions of the brain.
 
-The Improved UNet is different from the Simple UNet model in the following main ways:
+This implementation of the Improved UNet architecture is different from the Simple UNet architecture in the following main ways:
 * LeakyReLU activation function used over ReLU
 * Batch Normalization after all convolutional layers
 
@@ -27,10 +26,12 @@ The following steps are involved in pre-processing the dataset.
 
 1. Images and Masks are resized to 128, 128
 2. Images and Masks converted to grayscale
-3. Interpolation implemented for image masks
-4. Masks binarized
-5. Images and Masks gathered in Tensors and Data Loaders
-   (these were separated by Training, Validation, and Test Images)
+3. Interpolation implemented
+   * Nearest for Segmentation Masks
+   * Bilinear for Images
+5. Masks binarized
+6. Images and Masks gathered in Tensors and Data Loaders
+   (separated by Training, Validation, and Test Images)
 
 #### Training
 
@@ -40,7 +41,7 @@ The following steps are involved in pre-processing the dataset.
 
 #### Testing
 
-After testing, the average dice coefficient similarity score was found to be 0.9857, alongside an average Dice Loss of 0.0143.
+After testing, the average dice coefficient similarity score was found to be 0.9854, alongside an average Dice Loss of 0.0146.
 
 ## Visualization
 
@@ -62,7 +63,7 @@ _Figure 3. Training Curve_
 
 ## Dependencies
 
-The following commands were used to setup the environment and install required packages/libraries.
+The following commands were used to setup the environment and install required packages/libraries. It is assumed python is installed on the machine prior.
 
 ```
 conda create --name torch python=3.10
@@ -77,7 +78,7 @@ The following options can be used to run the model on the Ranpur cluster. It is 
 that the model is run on the Ranpur cluster as the model directly references file paths
 relative to the location of the 2D OASIS dataset on Ranpur.
 
-#### Option 1
+#### Option 1 (using Ranpur cluster)
 
 ```
 vim runner
@@ -103,11 +104,14 @@ Run the following command in the location of the runner file.
 sbatch runner
 ```
 
-#### Option 2
+#### Option 2 (using Ranpur cluster)
 Alternatively, run the following commands directly in the terminal
 ```
 conda activate torch
 srun -p a100-test --gres=shard:1 python predict.py
 ```
 
-
+#### Option 3 (without Ranpur cluster)
+```
+python predict.py
+```
