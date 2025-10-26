@@ -111,7 +111,7 @@ conda activate torch
 srun -p a100-test --gres=shard:1 python predict.py
 ```
 
-#### Option 3 
+#### Option 3 (without Ranpur cluster)
 ```
 python predict.py
 ```
