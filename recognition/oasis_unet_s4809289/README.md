@@ -63,7 +63,7 @@ _Figure 3. Training Curve_
 
 ## Dependencies
 
-The following commands were used to setup the environment and install required packages/libraries.
+The following commands were used to setup the environment and install required packages/libraries. It is assumed python is installed on the machine prior.
 
 ```
 conda create --name torch python=3.10
