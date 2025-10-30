@@ -76,9 +76,9 @@ pip install numpy matplotlib
 
 The following options can be used to run the model on the Ranpur cluster. It is assumed
 that the model is run on the Ranpur cluster as the model directly references file paths
-relative to the location of the 2D OASIS dataset on Ranpur.
+relative to the location of the 2D OASIS dataset on Ranpur. 
 
-#### Option 1 (using Ranpur cluster)
+#### Option 1
 
 ```
 vim runner
@@ -104,14 +104,9 @@ Run the following command in the location of the runner file.
 sbatch runner
 ```
 
-#### Option 2 (using Ranpur cluster)
+#### Option 2
 Alternatively, run the following commands directly in the terminal
 ```
 conda activate torch
 srun -p a100-test --gres=shard:1 python predict.py
-```
-
-#### Option 3 (without Ranpur cluster)
-```
-python predict.py
 ```
